@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISCC Smart Portal | Digital Enrollment Solution</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div id="login-screen" class="iscc-login-bg">
+        <div class="iscc-login-card">
+            <div class="iscc-logo-header">
+                <i class="fas fa-university fa-3x"></i>
+                <h1>ISCC SMART PORTAL</h1>
+                <p>Digital Solutions for Student Services</p>
+            </div>
+            <form id="login-form">
+                <div class="iscc-input">
+                    <input type="text" id="user-id" placeholder="ID Number (admin / C-24-21444)" required>
+                </div>
+                <div class="iscc-input">
+                    <input type="password" id="user-pass" placeholder="Password (iscc123)" required>
+                </div>
+                <button type="submit" class="iscc-btn-login">SIGN IN</button>
+            </form>
+            <div class="iscc-login-footer"><small>© 2026 ISCC ICT Project</small></div>
+        </div>
+    </div>
+
+    <div id="portal-main" class="iscc-container" style="display: none;">
+        <aside class="iscc-sidebar">
+            <div class="iscc-sidebar-profile">
+                <div class="iscc-avatar" id="side-avatar">AD</div>
+                <h4 id="side-name">SYSTEM ADMIN</h4>
+                <span id="side-role">Registrar's Office</span>
+            </div>
+            <nav class="iscc-nav">
+                <a href="#" class="iscc-nav-item active" onclick="navTo('dash', this)"><i class="fas fa-th-large"></i> Home</a>
+                
+                <div id="admin-menu">
+                    <a href="#" class="iscc-nav-item" onclick="navTo('admin-enroll', this)"><i class="fas fa-user-plus"></i> Enroll Student</a>
+                    <a href="#" class="iscc-nav-item" onclick="navTo('admin-records', this)"><i class="fas fa-users-cog"></i> Masterlist</a>
+                </div>
+
+                <div id="student-menu" style="display: none;">
+                    <a href="#" class="iscc-nav-item" onclick="navTo('load', this)"><i class="fas fa-file-contract"></i> My COR</a>
+                    <a href="#" class="iscc-nav-item" onclick="navTo('grades', this)"><i class="fas fa-chart-line"></i> E-Grades</a>
+                    <a href="#" class="iscc-nav-item" onclick="navTo('payment', this)"><i class="fas fa-credit-card"></i> Online Payment</a>
+                </div>
+
+                <a href="#" class="iscc-nav-item logout" onclick="location.reload()"><i class="fas fa-power-off"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <section class="iscc-content">
+            <header class="iscc-topbar">
+                <div class="nav-info"><span id="nav-indicator">DASHBOARD</span></div>
+                <div class="system-badge">SERVER ONLINE</div>
+            </header>
+
+            <div class="iscc-body">
+                <div id="dash" class="iscc-tab active">
+                    <div class="iscc-card welcome-card">
+                        <h2>Welcome to ISCC Digital Portal</h2>
+                        <p>This system eliminates long queues by automating registration and grade viewing.</p>
+                    </div>
+                    <div class="dashboard-grid">
+                        <div class="stat-box"><h3>No Queues</h3><p>Online Transaction</p></div>
+                        <div class="stat-box gold"><h3>Instant</h3><p>Record Access</p></div>
+                        <div class="stat-box"><h3>Secure</h3><p>Data Privacy</p></div>
+                    </div>
+                </div>
+
+                <div id="admin-enroll" class="iscc-tab">
+                    <div class="iscc-card">
+                        <h3><i class="fas fa-user-plus"></i> Digital Enrollment Form</h3>
+                        <form id="enrollment-form" class="grid-form">
+                            <input type="text" id="new-name" placeholder="Full Name" required>
+                            <input type="text" id="new-id" placeholder="Student ID (C-XX-XXXXX)" required>
+                            <input type="text" id="new-course" placeholder="Course (e.g., BSIT)" required>
+                            <input type="password" id="new-pass" placeholder="Temporary Password" required>
+                            <button type="submit" class="iscc-btn-login">ENROLL NOW</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="admin-records" class="iscc-tab">
+                    <div class="iscc-card">
+                        <h3>Student Masterlist</h3>
+                        <table class="iscc-table">
+                            <thead><tr><th>ID Number</th><th>Full Name</th><th>Course</th><th>Status</th></tr></thead>
+                            <tbody id="masterlist-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="load" class="iscc-tab">
+                    <div class="iscc-card">
+                        <div class="card-header">
+                            <h3>Certificate of Registration (COR)</h3>
+                            <button class="print-btn" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                        </div>
+                        <table class="iscc-table">
+                            <thead><tr><th>Code</th><th>Subject</th><th>Units</th><th>Schedule</th></tr></thead>
+                            <tbody>
+                                <tr><td>WS102</td><td>Web Development 2</td><td>3</td><td>MW 9:00-10:30</td></tr>
+                                <tr><td>MAP101</td><td>Mobile App Dev</td><td>3</td><td>TTH 1:00-2:30</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="payment" class="iscc-tab">
+                    <div class="iscc-card">
+                        <h3>Digital Payment Submission</h3>
+                        <p>Upload proof of payment to skip the Cashier queue.</p>
+                        <div class="upload-area">
+                            <input type="file" id="proof">
+                            <button class="iscc-btn-login">SUBMIT PROOF</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="grades" class="iscc-tab">
+                    <div class="iscc-card">
+                        <h3>Academic Performance</h3>
+                        <table class="iscc-table">
+                            <thead><tr><th>Subject</th><th>Prelim</th><th>Midterm</th><th>Final</th></tr></thead>
+                            <tbody>
+                                <tr><td>WS102</td><td>1.25</td><td>1.50</td><td>1.25</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
