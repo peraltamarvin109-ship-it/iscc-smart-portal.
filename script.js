@@ -1,27 +1,36 @@
-// SIMULATED DATA
-let students = [
+// 1. DATABASE LOGIC: Kukunin ang data sa browser memory para hindi nawawala
+let students = JSON.parse(localStorage.getItem('iscc_portal_db')) || [
     { id: "C-24-21444", pass: "iscc123", name: "MARVIN P. BAGLIG", course: "BSIT", role: "STUDENT" }
 ];
 
-// 1. LOGIN SYSTEM
+// Function para i-save ang updated list sa memory
+function saveToLocal() {
+    localStorage.setItem('iscc_portal_db', JSON.stringify(students));
+}
+
+// 2. LOGIN LOGIC
 document.getElementById('login-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    const id = document.getElementById('user-id').value;
-    const pass = document.getElementById('user-pass').value;
+    const idInput = document.getElementById('user-id').value;
+    const passInput = document.getElementById('user-pass').value;
 
-    if(id === "admin" && pass === "admin123") {
-        enterSystem("ADMIN", { name: "ICT ADMIN", role: "Registrar's Office" });
+    // Admin Login
+    if(idInput === "admin" && passInput === "admin123") {
+        enterPortal("ADMIN", { name: "SYSTEM ADMIN", role: "Registrar's Office" });
+        return;
+    }
+
+    // Student Login (Dito iche-check ang in-enroll mong students)
+    const foundStudent = students.find(s => s.id === idInput && s.pass === passInput);
+    
+    if(foundStudent) {
+        enterPortal("STUDENT", foundStudent);
     } else {
-        const student = students.find(s => s.id === id && s.pass === pass);
-        if(student) {
-            enterSystem("STUDENT", student);
-        } else {
-            alert("Mali ang ID o Password! (Student Password: iscc123)");
-        }
+        alert("Invalid ID Number or Password! Pakicheck kung na-enroll na ang ID sa Admin panel.");
     }
 });
 
-function enterSystem(role, user) {
+function enterPortal(role, user) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('portal-main').style.display = 'flex';
     
@@ -41,7 +50,7 @@ function enterSystem(role, user) {
     }
 }
 
-// 2. TAB NAVIGATION
+// 3. NAVIGATION LOGIC
 function navTo(tabId, el) {
     document.querySelectorAll('.iscc-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.iscc-nav-item').forEach(n => n.classList.remove('active'));
@@ -50,9 +59,10 @@ function navTo(tabId, el) {
     document.getElementById('nav-indicator').innerText = tabId.toUpperCase().replace('-', ' ');
 }
 
-// 3. ADMIN: ADD STUDENT
+// 4. ADMIN: ENROLLMENT LOGIC (Saving to LocalStorage)
 document.getElementById('enrollment-form').addEventListener('submit', function(e) {
     e.preventDefault();
+    
     const newStudent = {
         name: document.getElementById('new-name').value.toUpperCase(),
         id: document.getElementById('new-id').value,
@@ -61,15 +71,35 @@ document.getElementById('enrollment-form').addEventListener('submit', function(e
         role: "STUDENT"
     };
 
+    // I-check kung existing na ang ID
+    if(students.find(s => s.id === newStudent.id)) {
+        alert("Error: Ang ID na ito ay enrolled na!");
+        return;
+    }
+
+    // I-add sa array at i-save sa browser memory
     students.push(newStudent);
-    alert("SUCCESS! Student Enrolled Digitaly. No more queues!");
+    saveToLocal(); 
+
+    alert("SUCCESS! Enrolled na si " + newStudent.name + ". Pwede na siyang mag-login.");
     this.reset();
     renderMasterlist();
 });
 
+// Function para ipakita ang listahan sa Admin Records
 function renderMasterlist() {
-    const list = document.getElementById('masterlist-body');
-    list.innerHTML = students.map(s => `
-        <tr><td>${s.id}</td><td>${s.name}</td><td>${s.course}</td><td><span style="color:green; font-weight:bold;">ENROLLED</span></td></tr>
-    `).join('');
+    const listBody = document.getElementById('masterlist-body');
+    if(!listBody) return;
+    
+    listBody.innerHTML = "";
+    students.forEach(s => {
+        listBody.innerHTML += `
+            <tr>
+                <td>${s.id}</td>
+                <td>${s.name}</td>
+                <td>${s.course}</td>
+                <td><span style="color: green; font-weight: bold;">ACTIVE</span></td>
+            </tr>
+        `;
+    });
 }
